@@ -1,0 +1,94 @@
+@startuml
+
+class Classe {
+  + CodeClasse: int
+  + NomClasse: string
+  + CodeGroupe: int
+  + CodeDepartement: int
+}
+
+class Matiere {
+  + CodeMatiere: int
+  + NomMatiere: string
+  + NbreHeureCoursParSemaine: int
+  + NbreHeureTDParSemaine: int
+  + NbreHeureTPParSemaine: int
+}
+
+class Seance {
+  + CodeSeance: int
+  + NomSeance: string
+  + HeureDebut: Time
+  + HeureFin: Time
+}
+
+class Groupe {
+  + CodeGroupe: int
+  + NomGroupe: string
+}
+
+class FicheAbsence {
+  + CodeFicheAbsence: int
+  + DateJour: Date
+  + CodeMatiere: int
+  + CodeEnseignant: int
+  + CodeClasse: int
+}
+
+class FicheAbsenceSeance {
+  + CodeFicheAbsence: int
+  + CodeSeance: int
+}
+
+class LigneFicheAbsence {
+  + CodeFicheAbsence: int
+  + CodeEtudiant: int
+}
+
+class Departement {
+  + CodeDepartement: int
+  + NomDepartement: string
+}
+
+class Grade {
+  + CodeGrade: int
+  + NomGrade: string
+}
+
+class Enseignant {
+  + CodeEnseignant: int
+  + Nom: string
+  + Prenom: string
+  + DateRecrutement: Date
+  + Adresse: string
+  + Mail: string
+  + Tel: string
+  + CodeDepartement: int
+  + CodeGrade: int
+}
+
+class Etudiant {
+  + CodeEtudiant: int
+  + Nom: string
+  + Prenom: string
+  + DateNaissance: Date
+  + CodeClasse: int
+  + NumInscription: string
+  + Adresse: string
+  + Mail: string
+  + Tel: string
+}
+
+Departement "1" -- "0..*" Classe : manages
+Departement "1" -- "0..*" Enseignant : employs
+Classe "1" -- "0..*" Groupe : assigned to
+FicheAbsence "1" -- "0..*" FicheAbsenceSeance : includes
+FicheAbsence "1" -- "0..*" LigneFicheAbsence : con  tains
+FicheAbsence "0..*" -- "1" Classe : concerns
+FicheAbsence "0..*" -- "1" Matiere : for
+FicheAbsence "0..*" -- "1" Enseignant : recorded by
+FicheAbsenceSeance "0..*" -- "1" Seance : scheduled for
+LigneFicheAbsence "0..*" -- "1" Etudiant : relates to
+Enseignant "0..*" -- "1" Grade : has
+
+@enduml
