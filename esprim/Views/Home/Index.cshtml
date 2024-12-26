@@ -1,0 +1,38 @@
+﻿@model IEnumerable<mini.project.Models.Groupe>
+@{
+    ViewData["Title"] = "Home";
+
+    var cardDetails = new[]
+    {
+        new { Title = "Etudiant Management", Icon = "fas fa-user-graduate",  Description = "Manage all Etudiants in the system.", Controller = "Etudiant" },
+        new { Title = "Classe Management", Icon = "fas fa-users",  Description = "Manage all Classes in the system.", Controller = "Classe" },
+        new { Title = "Groupe Management", Icon = "fas fa-users", Description = "Manage all Groupes in the system.", Controller = "Groupe" },
+        new { Title = "Enseignant Management", Icon = "fas fa-chalkboard-teacher",  Description = "Manage all Enseignants in the system.", Controller = "Enseignant" },
+        new { Title = "Grade Management", Icon = "fas fa-cogs",  Description = "Manage all Grades in the system.", Controller = "Grade" },
+        new { Title = "Departement Management", Icon = "fas fa-building",  Description = "Manage all Departements in the system.", Controller = "Departement" },
+        new { Title = "Matiere Management", Icon = "fas fa-book-open",  Description = "Manage all Matieres in the system.", Controller = "Matiere" },
+        new { Title = "Seance Management", Icon = "fas fa-calendar",  Description = "Manage all Seances in the system.", Controller = "Seance" },
+        new { Title = "Absence Management", Icon = "fas fa-calendar-check",  Description = "Manage all Absences in the system.", Controller = "FicheAbsence" }
+    };
+}
+
+<div class="container-fluid py-4">
+    <div class="row gy-4">
+        @foreach (var card in cardDetails)
+        {
+            <div class="col-md-4">
+                <div class="card h-100">
+                    <div class="card-header bg-primary text-white text-center">
+                        <h4><i class="@card.Icon me-2"></i>@card.Title</h4>
+                    </div>
+                    <div class="card-body text-center">
+                        <p>@card.Description</p>
+                        <a class="btn btn-primary" href="@Url.Action("Index", card.Controller)">
+                            Go to @card.Title.Split(' ')[0]
+                        </a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
