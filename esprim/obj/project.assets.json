@@ -4523,11 +4523,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Administrator\\Documents\\GitHub\\mini.projet.net-\\src\\esprim\\esprim.csproj",
+      "projectUniqueName": "C:\\Users\\Administrator\\Documents\\GitHub\\ClassCheck\\esprim\\esprim.csproj",
       "projectName": "esprim",
-      "projectPath": "C:\\Users\\Administrator\\Documents\\GitHub\\mini.projet.net-\\src\\esprim\\esprim.csproj",
+      "projectPath": "C:\\Users\\Administrator\\Documents\\GitHub\\ClassCheck\\esprim\\esprim.csproj",
       "packagesPath": "C:\\Users\\Administrator\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Administrator\\Documents\\GitHub\\mini.projet.net-\\src\\esprim\\obj\\",
+      "outputPath": "C:\\Users\\Administrator\\Documents\\GitHub\\ClassCheck\\esprim\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

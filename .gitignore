@@ -1,0 +1,78 @@
+# .NET Core build output
+bin/
+obj/
+
+# User-specific files
+*.user
+*.userosscache
+*.suo
+*.userprefs
+
+# Windows Installer files
+*.cab
+*.msi
+*.msm
+*.msp
+
+# Windows Installer logs
+*.cab
+*.log
+
+# ASP.NET Scaffolding
+ScaffoldingReadMe.txt
+
+# VS Code directory and files
+.vscode/
+
+# Rider
+.idea/
+
+# JetBrains Rider user settings
+.idea/.idea/
+
+# User-specific configuration files for Visual Studio Code
+.vscode/settings.json
+
+# Entity Framework migrations
+*.csproj.user
+
+# Entity Framework Core backups
+migrations/
+
+# Node.js packages and dependencies (if using Node.js)
+node_modules/
+
+# NPM log files
+npm-debug.log
+
+# IDE-specific files (Visual Studio)
+.vs/
+.vs2019/
+
+# macOS specific files
+.DS_Store
+
+# Linux specific files
+*~
+
+# .NET Core project files (optional, but may be helpful to exclude)
+project.lock.json
+project.fragment.lock.json
+
+# JetBrains Rider and IntelliJ IDEA settings
+.idea/
+
+# OSX specific files
+.DS_Store
+
+# Windows Installer files
+*.cab
+*.msi
+*.msm
+*.msp
+
+# Microsoft Azure WebJobs SDK
+*.azure
+
+# Mac and Linux
+*.swp
