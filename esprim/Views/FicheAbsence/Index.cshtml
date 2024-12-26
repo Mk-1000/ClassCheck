@@ -1,0 +1,307 @@
+﻿@model IEnumerable<mini.project.Models.FicheAbsence>
+
+@{
+    ViewData["Title"] = "Attendance Management";
+}
+
+<div class="container-fluid py-4">
+    <!-- Card for Attendance Management -->
+    <div class="card shadow">
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+             <h3 class="mb-0">
+                <i class="fas fa-calendar-check me-2"></i> Absence Management
+             </h3>
+            
+            <button class="btn btn-light" data-bs-toggle="modal" data-bs-target="#addFicheAbsenceModal">
+                <i class="fas fa-plus me-2"></i>Add New Absence Record
+            </button>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover" id="absenceTable">
+                    <thead class="table-light">
+                        <tr>
+                            <th style="width: 10%;">Date</th>
+                            <th style="width: 10%;">Subject</th>
+                            <th style="width: 10%;">Teacher</th>
+                            <th style="width: 15%;">Class</th>
+                            <th style="width: 25%;">Sessions & Absences</th>
+                            <th style="width: 30%;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var fiche in Model)
+                        {
+                            <tr>
+                                <td>@fiche.DateJour.ToString("dd/MM/yyyy")</td>
+                                <td>@fiche.Matiere?.NomMatiere</td>
+                                <td>@fiche.Enseignant?.Nom</td>
+                                <td>@fiche.Classe?.NomClasse</td>
+                                <td>
+                                    @foreach (var seance in fiche.FichesAbsenceSeances)
+                                    {
+                                        <div class="mb-2">
+                                            <span class="fw-bold">@seance.Seance?.NomSeance</span>
+                                            @if (seance.LignesFicheAbsence?.Any() == true)
+                                            {
+                                                <div class="ms-3 small">
+                                                    <span class="text-muted">Absent Students:</span>
+                                                    <ul class="list-unstyled mb-0">
+                                                        @foreach (var ligne in seance.LignesFicheAbsence.Where(l => l.IsAbsent))
+                                                        {
+                                                            <li>• @ligne.Etudiant?.Nom</li>
+                                                        }
+                                                    </ul>
+                                                </div>
+                                            }
+                                        </div>
+                                    }
+                                </td>
+                                <td class="d-flex gap-2">
+                                    <!-- Actions Column -->
+                                    @if (!fiche.FichesAbsenceSeances.Any())
+                                    {
+                                        <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#addSeanceModal-@fiche.CodeFicheAbsence">
+                                            <i class="fas fa-plus-circle me-1"></i>Add Session
+                                        </button>
+                                    }
+                                    else
+                                    {
+                                        <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#removeSeanceModal-@fiche.CodeFicheAbsence">
+                                            <i class="fas fa-minus-circle me-1"></i>Remove Session
+                                        </button>
+                                    }
+
+                                    <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#assignStudentsModal-@fiche.CodeFicheAbsence">
+                                        <i class="fas fa-user-plus me-1"></i>Mark Absences
+                                    </button>
+
+                                    <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editModal-@fiche.CodeFicheAbsence">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+
+                                    <form action="@Url.Action("Delete", "FicheAbsence", new { id = fiche.CodeFicheAbsence })" method="post" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this Etudiant?');">
+                                        <button type="submit" class="btn btn-danger btn-sm">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+
+                            <!-- Add Session Modal -->
+                            <div class="modal fade" id="addSeanceModal-@fiche.CodeFicheAbsence" tabindex="-1">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <form asp-action="AddSeance" method="post" class="needs-validation" novalidate>
+                                            @Html.AntiForgeryToken()
+                                            <input type="hidden" name="codeFicheAbsence" value="@fiche.CodeFicheAbsence" />
+                                            <div class="modal-header bg-success text-white">
+                                                <h5 class="modal-title">Add Session</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="mb-3">
+                                                    <label class="form-label">Session</label>
+                                                    <select name="codeSeance" class="form-select" required>
+                                                        <option value="">Select a session...</option>
+                                                        @foreach (var item in (SelectList)ViewData["SeanceList"])
+                                                        {
+                                                            <option value="@item.Value">@item.Text</option>
+                                                        }
+                                                    </select>
+                                                    <div class="invalid-feedback">
+                                                        Please select a session.
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                                <button type="submit" class="btn btn-success">Add Session</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Mark Absences Modal -->
+                            <div class="modal fade" id="assignStudentsModal-@fiche.CodeFicheAbsence" tabindex="-1">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <form asp-action="AssignStudents" method="post" class="needs-validation" novalidate>
+                                            @Html.AntiForgeryToken()
+                                            <input type="hidden" name="codeFicheAbsenceSeance" value="@fiche.FichesAbsenceSeances.FirstOrDefault()?.CodeFicheAbsenceSeance" />
+                                            <div class="modal-header bg-info text-white">
+                                                <h5 class="modal-title">Mark Student Absences</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="mb-3">
+                                                    <label class="form-label">Select Absent Students</label>
+                                                    <select name="codeEtudiants" class="form-select" multiple size="10" required>
+                                                        @foreach (var item in (SelectList)ViewData["StudentList"])
+                                                        {
+                                                            <option value="@item.Value">@item.Text</option>
+                                                        }
+                                                    </select>
+                                                    <div class="invalid-feedback">
+                                                        Please select at least one student.
+                                                    </div>
+                                                    <small class="text-muted">
+                                                        Hold Ctrl/Cmd to select multiple students
+                                                    </small>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                                <button type="submit" class="btn btn-info">Mark Absences</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add New Attendance Form Modal -->
+<div class="modal fade" id="addFicheAbsenceModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form asp-action="Create" method="post" class="needs-validation" novalidate>
+                @Html.AntiForgeryToken()
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title">New Attendance Form</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Date</label>
+                        <input type="date" name="DateJour" class="form-control" required max="@DateTime.Now.ToString("yyyy-MM-dd")" />
+                        <div class="invalid-feedback">
+                            Please select a valid date.
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Subject</label>
+                        <select name="CodeMatiere" class="form-select" required>
+                            <option value="">Select a subject...</option>
+                            @foreach (var item in (SelectList)ViewData["MatiereList"])
+                            {
+                                <option value="@item.Value">@item.Text</option>
+                            }
+                        </select>
+                        <div class="invalid-feedback">Please select a subject.</div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Teacher</label>
+                        <select name="CodeEnseignant" class="form-select" required>
+                            <option value="">Select a teacher...</option>
+                            @foreach (var item in (SelectList)ViewData["EnseignantList"])
+                            {
+                                <option value="@item.Value">@item.Text</option>
+                            }
+                        </select>
+                        <div class="invalid-feedback">Please select a teacher.</div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Class</label>
+                        <select name="CodeClasse" class="form-select" required>
+                            <option value="">Select a class...</option>
+                            @foreach (var item in (SelectList)ViewData["ClasseList"])
+                            {
+                                <option value="@item.Value">@item.Text</option>
+                            }
+                        </select>
+                        <div class="invalid-feedback">Please select a class.</div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Create Form</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteConfirmModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form asp-action="Delete" method="post">
+                @Html.AntiForgeryToken()
+                <input type="hidden" id="deleteId" name="id" />
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title">Confirm Delete</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to delete this attendance form? This action cannot be undone.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Initialize DataTables
+        $(document).ready(function() {
+            $('#absenceTable').DataTable({
+                order: [[0, 'desc']], // Sort by date descending
+                language: {
+                    search: "Search records:"
+                },
+                pageLength: 10,
+                responsive: true
+            });
+
+            // Initialize Select2 for multiple select
+            $('select[multiple]').select2({
+                theme: 'bootstrap-5',
+                width: '100%',
+                placeholder: 'Select students...',
+                allowClear: true
+            });
+
+            // Form validation
+            const forms = document.querySelectorAll('.needs-validation');
+            Array.from(forms).forEach(form => {
+                form.addEventListener('submit', event => {
+                    if (!form.checkValidity()) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                });
+            });
+
+            // Auto-hide alerts after 5 seconds
+            setTimeout(function() {
+                $('.alert').alert('close');
+            }, 5000);
+        });
+
+        // Delete confirmation
+        function confirmDelete(id) {
+            $('#deleteId').val(id);
+            $('#deleteConfirmModal').modal('show');
+        }
+
+        // Show loading spinner
+        $(document).on('submit', 'form', function() {
+            const submitBtn = $(this).find('button[type="submit"]');
+            submitBtn.prop('disabled', true);
+            submitBtn.html('<span class="spinner-border spinner-border-sm me-2"></span>Processing...');
+        });
+    </script>
+}
