@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using esprim.Models;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using mini.project.Models;
@@ -36,6 +37,16 @@ public class EtudiantController : Controller
     {
         if (ModelState.IsValid)
         {
+            var user = new User
+            {
+                Username = etudiant.Nom + "." +etudiant.Prenom,
+                Password = "Password",
+                Role = "Etudiant"
+            };
+            _context.Users.Add(user);
+            await _context.SaveChangesAsync();
+
+            etudiant.CodeUser = user.CodeUser;
             _context.Add(etudiant);
             await _context.SaveChangesAsync();
             TempData["SuccessMessage"] = "Etudiant created successfully!";

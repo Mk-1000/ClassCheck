@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using esprim.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace mini.project.Models
 {
@@ -7,6 +8,7 @@ namespace mini.project.Models
         public MyDbContext(DbContextOptions<MyDbContext> options) : base(options) { }
 
         // DbSet properties
+        public DbSet<User> Users { get; set; }
         public DbSet<Classe> Classes { get; set; }
         public DbSet<Matiere> Matieres { get; set; }
         public DbSet<Seance> Seances { get; set; }
@@ -74,7 +76,6 @@ namespace mini.project.Models
                 .WithMany(e => e.LignesFicheAbsence)
                 .HasForeignKey(lfa => lfa.CodeEtudiant);
 
-            // Configure other foreign key constraints as needed
         }
     }
 }

@@ -76,3 +76,6 @@ project.fragment.lock.json
 
 # Mac and Linux
 *.swp
+/esprim/bin
+/esprim/bin
+/esprim/obj

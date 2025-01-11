@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using esprim.Models;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace mini.project.Models
@@ -16,9 +17,15 @@ namespace mini.project.Models
 
         [ForeignKey("Departement")]
         public int CodeDepartement { get; set; }
+        public Departement? Departement { get; set; }
+
+
         [ForeignKey("Grade")]
         public int CodeGrade { get; set; }
-        public Departement? Departement { get; set; }
         public Grade? Grade { get; set; }
+
+        [ForeignKey("User")]
+        public int CodeUser { get; set; }
+        public User? User { get; set; }
     }
 }

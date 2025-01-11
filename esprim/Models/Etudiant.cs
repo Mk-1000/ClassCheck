@@ -1,4 +1,5 @@
-﻿using mini.project.Models;
+﻿using esprim.Models;
+using mini.project.Models;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -21,6 +22,10 @@ namespace mini.project.Models
 
         public Classe? Classe { get; set; }
         public ICollection<LigneFicheAbsence> LignesFicheAbsence { get; set; } = new List<LigneFicheAbsence>();
+
+        [ForeignKey("User")]
+        public int CodeUser { get; set; }
+        public User? User { get; set; }
 
     }
 }

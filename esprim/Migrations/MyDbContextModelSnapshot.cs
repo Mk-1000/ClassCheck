@@ -22,6 +22,30 @@ namespace esprim.Migrations
 
             MySqlModelBuilderExtensions.AutoIncrementColumns(modelBuilder);
 
+            modelBuilder.Entity("esprim.Models.User", b =>
+                {
+                    b.Property<int>("CodeUser")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("CodeUser"));
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Role")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Username")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasKey("CodeUser");
+
+                    b.ToTable("Users");
+                });
+
             modelBuilder.Entity("mini.project.Models.Classe", b =>
                 {
                     b.Property<int>("CodeClasse")
@@ -85,6 +109,9 @@ namespace esprim.Migrations
                     b.Property<int>("CodeGrade")
                         .HasColumnType("int");
 
+                    b.Property<int>("CodeUser")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("DateRecrutement")
                         .HasColumnType("datetime(6)");
 
@@ -108,6 +135,8 @@ namespace esprim.Migrations
 
                     b.HasIndex("CodeGrade");
 
+                    b.HasIndex("CodeUser");
+
                     b.ToTable("Enseignants");
                 });
 
@@ -123,6 +152,9 @@ namespace esprim.Migrations
                         .HasColumnType("longtext");
 
                     b.Property<int?>("CodeClasse")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CodeUser")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("DateNaissance")
@@ -148,6 +180,8 @@ namespace esprim.Migrations
                     b.HasKey("CodeEtudiant");
 
                     b.HasIndex("CodeClasse");
+
+                    b.HasIndex("CodeUser");
 
                     b.ToTable("Etudiants");
                 });
@@ -347,9 +381,17 @@ namespace esprim.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("esprim.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("CodeUser")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Departement");
 
                     b.Navigation("Grade");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("mini.project.Models.Etudiant", b =>
@@ -358,7 +400,15 @@ namespace esprim.Migrations
                         .WithMany("Etudiants")
                         .HasForeignKey("CodeClasse");
 
+                    b.HasOne("esprim.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("CodeUser")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Classe");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("mini.project.Models.FicheAbsence", b =>
