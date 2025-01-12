@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using mini.project.Models;
 
@@ -9,7 +10,16 @@ builder.Services.AddControllersWithViews();
 // Configure the database context to use MySQL
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<MyDbContext>(options =>
-    options.UseMySql(connectionString, new MySqlServerVersion(new Version(8, 0, 32)))); // Ensure MySQL version is correctly set
+    options.UseMySql(connectionString, new MySqlServerVersion(new Version(8, 0, 32))));
+
+// Configure authentication
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.LoginPath = "/Login/Index"; // Redirect to login page on unauthorized access
+        options.LogoutPath = "/Login/Logout"; // Path for logging out
+        options.AccessDeniedPath = "/Home/AccessDenied"; // Optional: Path for access denied
+    });
 
 // Add Swagger services for API documentation
 builder.Services.AddEndpointsApiExplorer();
@@ -37,13 +47,12 @@ else
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-
 app.UseRouting();
 
-// If you're using authentication, make sure to add the following:
+// Use authentication and authorization middleware
+app.UseAuthentication();
 app.UseAuthorization();
 
-// Register your endpoints and controller actions
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
