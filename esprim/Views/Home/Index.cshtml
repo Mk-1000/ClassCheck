@@ -2,37 +2,44 @@
 @{
     ViewData["Title"] = "Home";
 
-    var cardDetails = new[]
+    var allCardDetails = new[]
     {
-        new { Title = "Etudiant Management", Icon = "fas fa-user-graduate",  Description = "Manage all Etudiants in the system.", Controller = "Etudiant" },
-        new { Title = "Classe Management", Icon = "fas fa-users",  Description = "Manage all Classes in the system.", Controller = "Classe" },
-        new { Title = "Groupe Management", Icon = "fas fa-users", Description = "Manage all Groupes in the system.", Controller = "Groupe" },
-        new { Title = "Enseignant Management", Icon = "fas fa-chalkboard-teacher",  Description = "Manage all Enseignants in the system.", Controller = "Enseignant" },
-        new { Title = "Grade Management", Icon = "fas fa-cogs",  Description = "Manage all Grades in the system.", Controller = "Grade" },
-        new { Title = "Departement Management", Icon = "fas fa-building",  Description = "Manage all Departements in the system.", Controller = "Departement" },
-        new { Title = "Matiere Management", Icon = "fas fa-book-open",  Description = "Manage all Matieres in the system.", Controller = "Matiere" },
-        new { Title = "Seance Management", Icon = "fas fa-calendar",  Description = "Manage all Seances in the system.", Controller = "Seance" },
-        new { Title = "Absence Management", Icon = "fas fa-calendar-check",  Description = "Manage all Absences in the system.", Controller = "FicheAbsence" }
+        new { Title = "Etudiants", Icon = "fas fa-user-graduate", Description = "View and manage all Etudiants.", Controller = "Etudiant", Roles = new[] { "Admin", "Enseignant" } },
+        new { Title = "Classes", Icon = "fas fa-users", Description = "View and manage all Classes.", Controller = "Classe", Roles = new[] { "Admin", "Enseignant" } },
+        new { Title = "Groupes", Icon = "fas fa-users", Description = "View and manage all Groupes.", Controller = "Groupe", Roles = new[] { "Admin", "Enseignant" } },
+        new { Title = "Enseignants", Icon = "fas fa-chalkboard-teacher", Description = "View and manage all Enseignants.", Controller = "Enseignant", Roles = new[] { "Admin" } },
+        new { Title = "Grades", Icon = "fas fa-cogs", Description = "View and manage all Grades.", Controller = "Grade", Roles = new[] { "Admin" } },
+        new { Title = "Departements", Icon = "fas fa-building", Description = "View and manage all Departements.", Controller = "Departement", Roles = new[] { "Admin" } },
+        new { Title = "Matieres", Icon = "fas fa-book-open", Description = "View and manage all Matieres.", Controller = "Matiere", Roles = new[] { "Admin" } },
+        new { Title = "Seances", Icon = "fas fa-calendar", Description = "View and manage all Seances.", Controller = "Seance", Roles = new[] { "Admin" } },
+        new { Title = "Absences", Icon = "fas fa-calendar-check", Description = "View and manage all Absences.", Controller = "FicheAbsence", Roles = new[] { "Admin", "Etudiant" } }
     };
+
+    var userRoles = User.Claims.Where(c => c.Type == System.Security.Claims.ClaimTypes.Role).Select(c => c.Value).ToList();
 }
 
 <div class="container-fluid py-4">
-    <div class="row gy-4">
-        @foreach (var card in cardDetails)
+    <div class="row d-flex justify-content-center align-items-stretch gy-4">
+        @foreach (var card in allCardDetails)
         {
-            <div class="col-md-4">
-                <div class="card h-100">
-                    <div class="card-header bg-primary text-white text-center">
-                        <h4><i class="@card.Icon me-2"></i>@card.Title</h4>
-                    </div>
-                    <div class="card-body text-center">
-                        <p>@card.Description</p>
-                        <a class="btn btn-primary" href="@Url.Action("Index", card.Controller)">
-                            Go to @card.Title.Split(' ')[0]
-                        </a>
+            if (card.Roles.Any(role => userRoles.Contains(role)))
+            {
+                <div class="col-md-4 d-flex justify-content-center">
+                    <div class="card h-100 w-100 d-flex flex-column" style="max-width: 350px;">
+                        <div class="card-header bg-primary text-white text-center">
+                            <h4><i class="@card.Icon me-2"></i>@card.Title</h4>
+                        </div>
+                        <div class="card-body text-center flex-grow-1">
+                            <p>@card.Description</p>
+                        </div>
+                        <div class="card-footer text-center">
+                            <a class="btn btn-primary" href="@Url.Action("Index", card.Controller)">
+                                Go to @card.Title.Split(' ')[0]
+                            </a>
+                        </div>
                     </div>
                 </div>
-            </div>
+            }
         }
     </div>
 </div>
