@@ -39,7 +39,7 @@ public class EtudiantController : Controller
         {
             var user = new User
             {
-                Username = etudiant.Nom + "." +etudiant.Prenom,
+                Username = etudiant.Nom.ToLower() + "." +etudiant.Prenom.ToLower(),
                 Password = "Password",
                 Role = "Etudiant"
             };

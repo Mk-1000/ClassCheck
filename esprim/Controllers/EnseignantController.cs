@@ -42,7 +42,7 @@ public class EnseignantController : Controller
         {
             var user = new User
             {
-                Username = enseignant.Nom + "." + enseignant.Prenom,
+                Username = enseignant.Nom.ToLower() + "." + enseignant.Prenom.ToLower(),
                 Password = "Password",
                 Role = "Enseignant"
             };

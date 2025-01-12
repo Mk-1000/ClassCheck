@@ -31,7 +31,21 @@ public class FicheAbsenceController : Controller
         ViewData["EnseignantList"] = new SelectList(await _context.Enseignants.ToListAsync(), "CodeEnseignant", "Nom");
         ViewData["ClasseList"] = new SelectList(await _context.Classes.ToListAsync(), "CodeClasse", "NomClasse");
         ViewData["SeanceList"] = new SelectList(await _context.Seances.ToListAsync(), "CodeSeance", "NomSeance");
-        ViewData["StudentList"] = new SelectList(await _context.Etudiants.ToListAsync(), "CodeEtudiant", "Nom");
+        var etudiants = await _context.Etudiants
+            .Include(e => e.Classe)  // Include related Classe
+            .Include(e => e.User)    // Include related User
+            .ToListAsync();
+
+        // Create an anonymous object to include CodeClasse
+        var studentList = etudiants.Select(e => new StudentViewModel
+        {
+            CodeEtudiant = e.CodeEtudiant,
+            FullName = e.FullName,
+            CodeClasse = e.Classe.CodeClasse
+        }).ToList();
+
+        // Pass the list to ViewData (instead of SelectList)
+        ViewData["StudentList"] = studentList;
 
         return View(fichesAbsence);
     }

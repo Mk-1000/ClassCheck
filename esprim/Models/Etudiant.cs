@@ -17,6 +17,9 @@ namespace mini.project.Models
         public string? Mail { get; set; }
         public string? Tel { get; set; }
 
+        public string FullName => $"{Nom} {Prenom}";
+
+
         [ForeignKey("Classe")]
         public int? CodeClasse { get; set; }
 

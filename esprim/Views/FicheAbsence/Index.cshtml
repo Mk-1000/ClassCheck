@@ -1,4 +1,5 @@
-﻿@model IEnumerable<mini.project.Models.FicheAbsence>
+﻿@using mini.project.Models
+@model IEnumerable<mini.project.Models.FicheAbsence>
 
 @{
     ViewData["Title"] = "Attendance Management";
@@ -138,11 +139,16 @@
                                                 <div class="mb-3">
                                                     <label class="form-label">Select Absent Students</label>
                                                     <select name="codeEtudiants" class="form-select" multiple size="10" required>
-                                                        @foreach (var item in (SelectList)ViewData["StudentList"])
+                                                        @foreach (var student in (List<StudentViewModel>)ViewData["StudentList"])
                                                         {
-                                                            <option value="@item.Value">@item.Text</option>
+                                                            if (fiche.CodeClasse == student.CodeClasse)
+                                                            {
+                                                                <option value="@student.CodeEtudiant">@student.FullName</option>
+                                                            }
                                                         }
                                                     </select>
+
+
                                                     <div class="invalid-feedback">
                                                         Please select at least one student.
                                                     </div>

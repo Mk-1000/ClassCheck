@@ -17,11 +17,13 @@ namespace esprim.Controllers
 
         public IActionResult Index()
         {
+            ViewData["ActivePage"] = "Home";
             return View();
         }
 
         public IActionResult Privacy()
         {
+            ViewData["ActivePage"] = "Privacy";
             return View();
         }
 

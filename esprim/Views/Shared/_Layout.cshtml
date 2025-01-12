@@ -13,37 +13,76 @@
     <!-- Custom CSS -->
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/esprim.styles.css" asp-append-version="true" />
+
+    <style>
+        /* Ensure all nav-links have the same style */
+        .navbar-nav .nav-item .nav-link {
+        color: #000; /* Default color */
+        }
+
+        /* Style for the active link */
+        .navbar-nav .nav-item .nav-link.active {
+        color: #007bff; /* Active color (same as other active links) */
+        font-weight: bold; /* Optional: make active link bold */
+        }
+
+        /* Optional: Change background on hover for better user experience */
+        .navbar-nav .nav-item .nav-link:hover {
+        background-color: #f8f9fa;
+        }
+
+    </style>
+
 </head>
 <body>
     <!-- Header Section -->
     <header>
         <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom box-shadow mb-3">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Esprim</a>
+                <h3 class="text-primary">Esprim</h3>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav"
-                        aria-expanded="false" aria-label="Toggle navigation">
+                aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        @if (User.Identity.IsAuthenticated && !User.IsInRole("Etudiant"))
+                        {
+                            <!-- Home Link -->
+                            <li class="nav-item">
+                                <a class="nav-link @((ViewData["ActivePage"]?.ToString() == "Home") ? "active" : "")"
+                                asp-area="" asp-controller="Home" asp-action="Index">
+                                    Home
+                                </a>
+                            </li>
+                        }
+                        <!-- Dashboard Link (Admin Only) -->
+                       
                         <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a href="@Url.Action("Index", "Dashboard")"
+                                class="nav-link @((ViewData["ActivePage"]?.ToString() == "Dashboard") ? "active" : "")">
+                                Dashboard
+                            </a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
+                        
                     </ul>
+
                     <ul class="navbar-nav ms-auto">
+                        <!-- User Actions (Login / Logout) -->
                         @if (User.Identity.IsAuthenticated)
                         {
                             <li class="nav-item">
-                                <a class="nav-link" asp-controller="Login" asp-action="Logout">Logout <i class="fas fa-sign-out-alt"></i></a>
+                                <a class="nav-link" asp-controller="Login" asp-action="Logout">
+                                    Logout <i class="fas fa-sign-out-alt"></i>
+                                </a>
                             </li>
                         }
                         else
                         {
                             <li class="nav-item">
-                                <a class="nav-link" asp-controller="Login" asp-action="Index">Login <i class="fas fa-sign-in-alt"></i></a>
+                                <a class="nav-link" asp-controller="Login" asp-action="Index">
+                                    Login <i class="fas fa-sign-in-alt"></i>
+                                </a>
                             </li>
                         }
                     </ul>
@@ -51,6 +90,7 @@
             </div>
         </nav>
     </header>
+
 
     <!-- Flash Messages Section -->
     <div class="container mt-3">

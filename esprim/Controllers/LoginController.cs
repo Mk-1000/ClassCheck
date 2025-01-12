@@ -48,7 +48,7 @@ public class LoginController : Controller
                 new ClaimsPrincipal(claimsIdentity), authProperties);
 
             TempData["SuccessMessage"] = "Login successful!";
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", "Dashboard");
         }
         else
         {
