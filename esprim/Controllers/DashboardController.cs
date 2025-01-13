@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using mini.project.Models;
+using System.Data;
 
 public class DashboardController : Controller
 {
@@ -19,6 +20,24 @@ public class DashboardController : Controller
         var totalDepartments = await _context.Departements.CountAsync();
 
         var absenceQuery = _context.FichesAbsence.AsQueryable();
+
+        var userRoles = User.Claims.Where(c => c.Type == System.Security.Claims.ClaimTypes.Role).Select(c => c.Value).ToList();
+        var userFullName = User.Claims.Where(c => c.Type == System.Security.Claims.ClaimTypes.Name)
+                                      .Select(c => c.Value)
+                                      .FirstOrDefault();
+
+        if (userFullName != null)
+        {
+            string[] nameParts = userFullName.Split('.');
+            string Nom = nameParts[0];
+            string Prenom = nameParts[1];
+
+            absenceQuery = absenceQuery.Where(a =>
+                a.FichesAbsenceSeances.Any(fas =>
+                    fas.LignesFicheAbsence.Any(lfa =>
+                        lfa.Etudiant.Nom == Nom && lfa.Etudiant.Prenom == Prenom)));
+        }
+
 
         if (!string.IsNullOrEmpty(studentName))
         {
@@ -85,6 +104,7 @@ public class DashboardController : Controller
         ViewData["ActivePage"] = "Dashboard";
         return View(model);
     }
+
 
 
 
