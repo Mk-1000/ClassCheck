@@ -20,7 +20,6 @@ public class ClasseController : Controller
                                     .Include(c => c.Departement)
                                     .ToListAsync();
 
-        // Ensure ViewData is populated before returning the view
         ViewData["GroupeList"] = new SelectList(_context.Groupes, "CodeGroupe", "NomGroupe");
         ViewData["DepartementList"] = new SelectList(_context.Departements, "CodeDepartement", "NomDepartement");
 
@@ -30,7 +29,6 @@ public class ClasseController : Controller
     // GET: Classe/Create
     public IActionResult Create()
     {
-        // Populate Groupe and Departement lists
         ViewData["GroupeList"] = new SelectList(_context.Groupes, "CodeGroupe", "NomGroupe");
         ViewData["DepartementList"] = new SelectList(_context.Departements, "CodeDepartement", "NomDepartement");
         return View();
@@ -49,7 +47,6 @@ public class ClasseController : Controller
         }
         TempData["ErrorMessage"] = "Error creating Classe.";
 
-        // Re-populate the lists if there's an error
         ViewData["GroupeList"] = new SelectList(_context.Groupes, "CodeGroupe", "NomGroupe", classe.CodeGroupe);
         ViewData["DepartementList"] = new SelectList(_context.Departements, "CodeDepartement", "NomDepartement", classe.CodeDepartement);
         return View(classe);
@@ -82,7 +79,6 @@ public class ClasseController : Controller
         }
         TempData["ErrorMessage"] = "Error updating Classe.";
 
-        // Re-populate the lists if there's an error
         ViewData["GroupeList"] = new SelectList(_context.Groupes, "CodeGroupe", "NomGroupe", classe.CodeGroupe);
         ViewData["DepartementList"] = new SelectList(_context.Departements, "CodeDepartement", "NomDepartement", classe.CodeDepartement);
         return View(classe);

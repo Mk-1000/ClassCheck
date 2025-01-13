@@ -82,6 +82,16 @@ class Seance {
     TimeSpan HeureFin
 }
 
+class User {
+    int CodeUser
+    string Username
+    string Password
+    string? Role
+}
+
+User "1" -- "*" Enseignant : has
+User "1" -- "*" Etudiant : has
+
 Departement "1" -- "*" Classe : contains
 Departement "1" -- "*" Enseignant : employs
 

@@ -1,18 +1,18 @@
 ﻿@model IEnumerable<mini.project.Models.Groupe>
 @{
-    ViewData["Title"] = "Services";
+    ViewData["Title"] = "Home";
 
     var allCardDetails = new[]
     {
-        new { Title = "Etudiants", Icon = "fas fa-user-graduate", Description = "View and manage all Etudiants.", Controller = "Etudiant", Roles = new[] { "Admin", "Enseignant" } },
-        new { Title = "Classes", Icon = "fas fa-users", Description = "View and manage all Classes.", Controller = "Classe", Roles = new[] { "Admin", "Enseignant" } },
-        new { Title = "Groupes", Icon = "fas fa-users", Description = "View and manage all Groupes.", Controller = "Groupe", Roles = new[] { "Admin", "Enseignant" } },
+        new { Title = "Etudiants", Icon = "fas fa-user-graduate", Description = "View and manage all Etudiants.", Controller = "Etudiant", Roles = new[] { "Admin" } },
+        new { Title = "Classes", Icon = "fas fa-users", Description = "View and manage all Classes.", Controller = "Classe", Roles = new[] { "Admin" } },
+        new { Title = "Groupes", Icon = "fas fa-users", Description = "View and manage all Groupes.", Controller = "Groupe", Roles = new[] { "Admin" } },
         new { Title = "Enseignants", Icon = "fas fa-chalkboard-teacher", Description = "View and manage all Enseignants.", Controller = "Enseignant", Roles = new[] { "Admin" } },
         new { Title = "Grades", Icon = "fas fa-cogs", Description = "View and manage all Grades.", Controller = "Grade", Roles = new[] { "Admin" } },
         new { Title = "Departements", Icon = "fas fa-building", Description = "View and manage all Departements.", Controller = "Departement", Roles = new[] { "Admin" } },
         new { Title = "Matieres", Icon = "fas fa-book-open", Description = "View and manage all Matieres.", Controller = "Matiere", Roles = new[] { "Admin" } },
         new { Title = "Seances", Icon = "fas fa-calendar", Description = "View and manage all Seances.", Controller = "Seance", Roles = new[] { "Admin" } },
-        new { Title = "Absences", Icon = "fas fa-calendar-check", Description = "View and manage all Absences.", Controller = "FicheAbsence", Roles = new[] { "Admin" } }
+        new { Title = "Absences", Icon = "fas fa-calendar-check", Description = "View and manage all Absences.", Controller = "FicheAbsence", Roles = new[] { "Admin" , "Enseignant"} }
     };
 
     var userRoles = User.Claims.Where(c => c.Type == System.Security.Claims.ClaimTypes.Role).Select(c => c.Value).ToList();

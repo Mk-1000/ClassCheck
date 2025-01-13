@@ -26,7 +26,7 @@ public class DashboardController : Controller
                                       .Select(c => c.Value)
                                       .FirstOrDefault();
 
-        if (userFullName != null)
+        if (userRoles.Contains("Etudiant") && userFullName != null)
         {
             string[] nameParts = userFullName.Split('.');
             string Nom = nameParts[0];
@@ -56,7 +56,6 @@ public class DashboardController : Controller
             absenceQuery = absenceQuery.Where(a => a.Classe.NomClasse.Contains(className));
         }
 
-        // Apply date filtering if provided
         if (startDate.HasValue)
         {
             absenceQuery = absenceQuery.Where(a => a.DateJour >= startDate.Value);
@@ -104,8 +103,5 @@ public class DashboardController : Controller
         ViewData["ActivePage"] = "Dashboard";
         return View(model);
     }
-
-
-
 
 }
